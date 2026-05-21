@@ -1,0 +1,123 @@
+﻿@model CodeAlpha_LanguageTranslationTool.Models.TranslationViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Language Translator";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Language Translator</title>
+    <link rel="stylesheet" href="~/css/translator.css" />
+</head>
+
+<body>
+    <main class="app-wrapper">
+        <section class="translator-box">
+
+            <div class="top-content">
+                <h1>Language Translator</h1>
+                <p>Translate your text quickly and easily into multiple languages.</p>
+            </div>
+
+            <form asp-controller="Translation" asp-action="Index" method="post">
+
+                <div class="language-selectors">
+
+                    <div class="field">
+                        <label>From</label>
+                        <select asp-for="SourceLanguage">
+                            <option value="auto">Auto Detect</option>
+                            <option value="en">English</option>
+                            <option value="ur">Urdu</option>
+                            <option value="hi">Hindi</option>
+                            <option value="ar">Arabic</option>
+                            <option value="fr">French</option>
+                            <option value="es">Spanish</option>
+                            <option value="de">German</option>
+                            <option value="tr">Turkish</option>
+                        </select>
+                    </div>
+
+                    <div class="swap-icon">⇄</div>
+
+                    <div class="field">
+                        <label>To</label>
+                        <select asp-for="TargetLanguage">
+                            <option value="ur">Urdu</option>
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="ar">Arabic</option>
+                            <option value="fr">French</option>
+                            <option value="es">Spanish</option>
+                            <option value="de">German</option>
+                            <option value="tr">Turkish</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="text-grid">
+
+                    <div class="text-card">
+                        <div class="text-header">
+                            <span>Original Text</span>
+                        </div>
+
+                        <textarea asp-for="InputText" placeholder="Enter your text here..."></textarea>
+                    </div>
+
+                    <div class="text-card result-card">
+                        <div class="text-header header-with-button">
+                            <span>Translation</span>
+                            <button type="button" class="small-copy-btn" onclick="copyTranslation()">
+                                Copy
+                            </button>
+                        </div>
+
+                        <textarea id="translatedText" readonly placeholder="Translated text will appear here...">@Model.TranslatedText</textarea>
+                    </div>
+
+                </div>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="error-box">
+                        @ViewBag.Error
+                    </div>
+                }
+
+                <div class="actions">
+                    <button type="submit" class="translate-btn">Translate</button>
+                    <button type="button" class="clear-btn" onclick="clearText()">Clear</button>
+                </div>
+
+            </form>
+
+        </section>
+    </main>
+
+    <script>
+        function clearText() {
+            document.querySelectorAll("textarea").forEach(function (textarea) {
+                textarea.value = "";
+            });
+        }
+
+        function copyTranslation() {
+            const translatedText = document.getElementById("translatedText").value;
+
+            if (translatedText.trim() === "") {
+                alert("No translated text to copy.");
+                return;
+            }
+
+            navigator.clipboard.writeText(translatedText);
+            alert("Translation copied successfully.");
+        }
+    </script>
+</body>
+</html>
